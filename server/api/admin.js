@@ -71,4 +71,38 @@ router.delete('/categories/:id', JwtUtil.checkToken, async function(req, res) {
   const result = await CategoryDAO.delete(_id);
   res.json(result);
 });
+
+
+//product
+router.post('/products', JwtUtil.checkToken, async function(req, res) {
+  const name = req.body.name;
+  const price = req.body.price;
+  const cid = req.body.category;
+  const image = req.body.image;
+  const now = new Date().getTime(); //miliseconds
+  const category = await CategoryDAO.selectByID(cid);
+  const product = { name: name, price: price, image: image, cdate: now, category: category };
+  const result = await ProductDAO.insert(product);
+  res.json(result);
+});
+
+router.put('/products', JwtUtil.checkToken, async function(req, res) {
+  const _id = req.body._id;
+  const name = req.body.name;
+  const price = req.body.price;
+  const cid = req.body.category;
+  const image = req.body.image;
+  const now = new Date().getTime(); //miliseconds
+  const category = await CategoryDAO.selectByID(cid);
+  const product = { name: name, price: price, image: image, cdate: now, category: category };
+  const result = await ProductDAO.update(product);
+  res.json(result);
+});
+
+router.delete('/products/:id', JwtUtil.checkToken, async function(req, res) {
+  const _id = req.params.id;
+  const result = await ProductDAO.delete(_id);
+  res.json(result);
+});
+
 module.exports = router;

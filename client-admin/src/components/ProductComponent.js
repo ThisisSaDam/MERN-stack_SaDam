@@ -59,11 +59,17 @@ class Product extends Component {
           </table>
         </div>
         <div className="inline" />
-        <ProductDetail item={this.state.itemSelected} />
+        <ProductDetail item={this.state.itemSelected} curPage={this.state.curPage}
+          updateProducts={this.updateProducts} />
+
         <div className="float-clear" />
       </div>
     );
   }
+  updateProducts = (products, noPages) => {
+    this.setState({products: products, noPages: noPages});
+  }
+
   componentDidMount() {
     this.apiGetProducts(this.state.curPage);
   }

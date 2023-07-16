@@ -59,7 +59,7 @@ class ProductDetail extends Component {
               <tr>
                 <td></td>
                 <td>
-                  <input type="submit" value='ADD NEW'/>
+                  <input type="submit" value='ADD NEW' onClick={(e) => this.btnAddClick(e)} />
                   <input type="submit" value='UPDATE'/>
                   <input type="submit" value='DELETE'/>
                 </td>
@@ -74,6 +74,68 @@ class ProductDetail extends Component {
       </div>
     );
   }
+  //event handlers
+  btnAddClick(e) {
+    e.preventDefault();
+    const name = this.state.txtName;
+    const price = parseInt(this.state.txtPrice);
+    const category = this.state.cmbCategory;
+    const image = this.state.imgProduct.replace(/^data:image\/[a-z]+;base64,/,'');
+    if (name && price && category) {
+      const prod = { name: name, price: price, category: category, image: image };
+      this.apiPutProduct(prod);
+    } else {
+      alert('Please input name and price and category and image');
+    }
+  }
+
+
+  btnDeleteClick(e) {
+    e.preventDefault();
+    if (window.confirm('ARE YOU SURE?')) {
+      const id = this.state.txtID;
+      if (id) {
+        this.apiDeleteProduct(id);
+      }
+    }
+  }
+
+
+  //apis
+  apiPostProduct(prod) {
+    const config = { headers: { 'x-access-token': this.context.token }};
+    axios.post('/api/admin/products', prod, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('Ok baby');
+        this.apiGetProducts();
+      } else {
+        alert('sr baby');
+      }
+    });
+  }
+
+  apiPutProduct(id, prod) {
+    const config = { headers: { 'x-access-token': this.context.token }};
+    axios.post('/api/admin/products',id, prod, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('Ok baby');
+        this.apiGetProducts();
+      } else {
+        alert('sr baby');
+      }
+    });
+  }
+
+  apiGetProducts() {
+    const config = {headers: { 'x-access-token': this.context.token }};
+    axios.get('/api/admin/products?page=', this.props.curPage, config).then((res) => {
+      const result = res.data;
+      this.props.updateProducts(result.products, result.noPages);
+    });
+  }
+
   componentDidMount() {
     this.apiGetCategories();
   }

@@ -11,7 +11,7 @@ const JwtUtil = {
  return token;
 },
 checkToken(req, res, next) {
- const token = req.headers ['x-access - token'] || req.headers['authorization'];
+ const token = req.headers ['x-access-token'] || req.headers['authorization'];
   if(token) {
     jwt.verify(token, MyConstants.JWT_SECRET, (err, decoded) => {
       if ( err ) {
